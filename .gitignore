@@ -1,0 +1,7 @@
+*.o
+Makefile
+config.*
+libtool
+src/config.h
+*.exe
+src/stamp-h1
