@@ -2,6 +2,8 @@
 
 This is katahiromz's fork of mcpp 2.7.2 made by Kiyoshi Matsui.
 
+The original software can be found at http://mcpp.sourceforge.net .
+
 This program can read UTF-16 files and output UTF-8 text.
 
 ## How to build
