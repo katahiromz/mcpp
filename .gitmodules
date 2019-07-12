@@ -1,0 +1,3 @@
+[submodule "UTF"]
+	path = UTF
+	url = https://github.com/katahiromz/UTF.git
