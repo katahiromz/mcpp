@@ -15,6 +15,23 @@ $ ./configure
 $ make
 ```
 
+If failed with error message:
+
+```txt
+../libtool: line 930: X--tag=CC: command not found
+...
+```
+
+Replace this line in libtool:
+```txt
+ECHO="printf %s\\n"
+```
+with:
+```txt
+echo="echo"
+```
+.
+
 ## For more info...
 
 See `README-OLD.txt`.
