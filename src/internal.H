@@ -569,3 +569,6 @@ extern void     init_system( void);
 #if HOST_HAVE_STPCPY
 extern char *   stpcpy( char * dest, const char * src);
 #endif
+
+extern void version(void);
+extern void usage(int opt);

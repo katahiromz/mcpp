@@ -105,9 +105,6 @@
 #endif
 #endif
 
-static void     version( void);
-                /* Print version message            */
-static void     usage( int opt);
                 /* Putout usage of MCPP             */
 static void     set_opt_list( char * optlist);
                 /* Set list of legal option chars   */
@@ -1360,7 +1357,7 @@ Version:
     }
 }
 
-static void version( void)
+void version( void)
 /*
  * Print version message.
  */
@@ -1403,7 +1400,7 @@ static void version( void)
         mcpp_fputs( *mpp++, ERR);
 }
 
-static void usage(
+void usage(
     int     opt
 )
 /*

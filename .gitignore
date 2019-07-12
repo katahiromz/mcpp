@@ -5,3 +5,4 @@ libtool
 src/config.h
 *.exe
 src/stamp-h1
+autom4te.cache
