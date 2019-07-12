@@ -4,7 +4,7 @@ This program is a C preprocessor written in C. And this is a fork of mcpp 2.7.2.
 The original author (Kiyoshi Matsui)'s software can be found at http://mcpp.sourceforge.net .
 
 I enabled this program to read UTF-16 files. If UTF-16 files specified, then this program 
-outputs UTF-8 text.
+outputs UTF-8 text. It recongnizes BOM (Byte Order Mark).
 
 ## How to build
 
