@@ -28,7 +28,7 @@ with:
 ```txt
 echo="echo"
 ```
-.
+and try `make` again.
 
 ## For more info...
 
