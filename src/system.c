@@ -3555,8 +3555,7 @@ void    add_file(
                 fseek(fp, -1, SEEK_CUR);
             pos = 2;
         }
-        else if (size >= 2 && memcmp(buf, "\xFE\xFF", 2) == 0 ||
-                 (size >= 2 && !buf[0] && buf[1]))
+        else if (size >= 2 && memcmp(buf, "\xFE\xFF", 2) == 0)
         {
             bom = BOM_UTF16BE;
             if (size > 2)
