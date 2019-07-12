@@ -119,6 +119,7 @@ static int  exp_mac_ind = 0;        /* Index into expanding_macro[] */
 static int  in_token = FALSE;       /* For token scanning functions */
 static int  in_string = FALSE;      /* For get_ch() and parse_line()*/
 static int  squeezews = FALSE;
+static int  in_error = 0;
 
 #define MAX_CAT_LINE    256
 /* Information on line catenated by <backslash><newline>    */
@@ -848,23 +849,23 @@ chk_limit:
                 if (mcpp_mode != POST_STD && option_flags.lang_asm) {
                     /* STD, KR      */
                     /* Concatenate the unterminated string to the next line */
-                    if (warn_level & 1)
+                    if ((warn_level & 1) && !in_error)
                         cwarn( unterm_string
                                 , ", catenated to the next line"    /* _W1_ */
                                 , 0L, NULL);
                     if (cat_line( FALSE) != NULL)
                         goto  scan;         /* Splice the lines     */
                     /* Else end of file     */
-                } else {
+                } else if (!in_error) {
                     cerror( unterm_string, skip, 0L, NULL); /* _E_  */
                 }
             } else if (delim == '\'') {
                 if (mcpp_mode != POST_STD && option_flags.lang_asm) {
                     /* STD, KR      */
-                    if (warn_level & 1)
+                    if ((warn_level & 1) && !in_error)
                         cwarn( unterm_char, out, 0L, NULL); /* _W1_ */
                     goto  done;
-                } else {
+                } else if (!in_error) {
                     cerror( unterm_char, out, 0L, skip);    /* _E_  */
                 }
             } else {
@@ -1652,9 +1653,11 @@ static char *   parse_line( void)
     char *      limit;                      /* Buffer end           */
     char *      tp;     /* Current pointer into temporary buffer    */
     char *      sp;                 /* Pointer into input buffer    */
+    char *      cp;
     size_t      com_size;
     int         c;
 
+    in_error = 0;
     if ((sp = get_line( FALSE)) == NULL)    /* Next logical line    */
         return  NULL;                       /* End of a file        */
     if (in_asm) {                           /* In #asm block        */
@@ -1663,6 +1666,21 @@ static char *   parse_line( void)
         if (*--sp == '#')                   /* Directive line       */
             infile->bptr = sp;
         return  infile->bptr;               /* Don't tokenize       */
+    } else {
+        cp = sp;
+        while (char_type[ *cp & UCHARMAX] & SPA)
+            cp++;
+        if (*cp == '#') {
+            ++cp;
+            while (char_type[ *cp & UCHARMAX] & SPA)
+                cp++;
+            tp = cp;
+            while (char_type[ *cp & UCHARMAX] & (LET | DIG))
+                cp++;
+            if (cp - tp == 5 && memcmp(tp, "error", 5) == 0) {
+                in_error = 1;
+            }
+        }
     }
     tp = temp = xmalloc( (size_t) NBUFF);
     limit = temp + NBUFF - 2;
