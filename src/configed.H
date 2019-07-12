@@ -163,9 +163,6 @@
 #else
 #define SYSTEM_EXT2         "__CYGWIN32__"
 #endif
-#ifndef MBCHAR
-#define MBCHAR              SJIS
-#endif
 #endif
 
 #if     SYSTEM == SYS_MINGW
@@ -175,14 +172,11 @@
 #else
 #define SYSTEM_EXT2         "__MINGW32__"
 #endif
-#ifndef MBCHAR
-#define MBCHAR              SJIS
-#endif
 #endif
 
 #if     SYS_FAMILY == SYS_UNIX
 #ifndef MBCHAR
-#define MBCHAR              EUC_JP      /* UTF8 if you like */
+#define MBCHAR              UTF8
 #endif
 #endif
 
@@ -319,7 +313,7 @@
  * Define MBCHAR (multi-byte character encoding) to SJIS, EUC_JP or other.
  */
 #ifndef MBCHAR
-#define MBCHAR              0
+#define MBCHAR              UTF8
 #endif
 
 /*
