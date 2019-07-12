@@ -1,8 +1,7 @@
 # mcpp by katahiromz
 
-This program is a C preprocessor written in C.
-And this is a fork of mcpp 2.7.2 created by Kiyoshi Matsui.
-The original author's software can be found at http://mcpp.sourceforge.net .
+This program is a C preprocessor written in C. And this is a fork of mcpp 2.7.2.
+The original author (Kiyoshi Matsui)'s software can be found at http://mcpp.sourceforge.net .
 
 This program can read UTF-16 files and output UTF-8 text.
 
