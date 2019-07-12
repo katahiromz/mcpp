@@ -856,8 +856,12 @@ chk_limit:
                     if (cat_line( FALSE) != NULL)
                         goto  scan;         /* Splice the lines     */
                     /* Else end of file     */
-                } else if (!in_error) {
-                    cerror( unterm_string, skip, 0L, NULL); /* _E_  */
+                } else {
+                    if (!in_error) {
+                        cerror( unterm_string, skip, 0L, NULL); /* _E_  */
+                    } else {
+                        goto done;
+                    }
                 }
             } else if (delim == '\'') {
                 if (mcpp_mode != POST_STD && option_flags.lang_asm) {
@@ -865,8 +869,12 @@ chk_limit:
                     if ((warn_level & 1) && !in_error)
                         cwarn( unterm_char, out, 0L, NULL); /* _W1_ */
                     goto  done;
-                } else if (!in_error) {
-                    cerror( unterm_char, out, 0L, skip);    /* _E_  */
+                } else {
+                    if (!in_error) {
+                        cerror( unterm_char, out, 0L, skip);    /* _E_  */
+                    } else {
+                        goto  done;
+                    }
                 }
             } else {
                 cerror( "Unterminated header name %s%.0ld%s"        /* _E_  */
