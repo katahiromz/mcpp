@@ -3540,37 +3540,43 @@ void    add_file(
     if (fp && ftell(fp) == 0)
     {
         size = fread(buf, 1, 3, fp);
-        if (size == 3 && memcmp(buf, "\xEF\xBB\xBF", 3) == 0)
+        if (size)
         {
-            bom = BOM_UTF8;
-            pos = 3;
-        }
-        else if (size >= 2 && memcmp(buf, "\xFF\xFE", 2) == 0)
-        {
-            bom = BOM_UTF16LE;
-            if (size > 2)
-                fseek(fp, -1, SEEK_CUR);
-            pos = 2;
-        }
-        else if (size >= 2 && memcmp(buf, "\xFE\xFF", 2) == 0)
-        {
-            bom = BOM_UTF16BE;
-            if (size > 2)
-                fseek(fp, -1, SEEK_CUR);
-            pos = 2;
-        }
-        else
-        {
-            if (size >= 2 && buf[0] && !buf[1])
+            if (size == 3 && memcmp(buf, "\xEF\xBB\xBF", 3) == 0)
+            {
+                bom = BOM_UTF8;
+                pos = 3;
+            }
+            else if (size >= 2 && memcmp(buf, "\xFF\xFE", 2) == 0)
             {
                 bom = BOM_UTF16LE;
+                if (size > 2)
+                    fseek(fp, -1, SEEK_CUR);
+                pos = 2;
             }
-            else if (size >= 2 && !buf[0] && buf[1])
+            else if (size >= 2 && memcmp(buf, "\xFE\xFF", 2) == 0)
             {
                 bom = BOM_UTF16BE;
+                if (size > 2)
+                    fseek(fp, -1, SEEK_CUR);
+                pos = 2;
             }
-            fseek(fp, 0, SEEK_SET);
-            pos = 0;
+            else
+            {
+                if (size >= 2)
+                {
+                    if (buf[0] && !buf[1])
+                    {
+                        bom = BOM_UTF16LE;
+                    }
+                    else if (!buf[0] && buf[1])
+                    {
+                        bom = BOM_UTF16BE;
+                    }
+                }
+                fseek(fp, 0, SEEK_SET);
+                pos = 0;
+            }
         }
     }
 
