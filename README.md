@@ -1,6 +1,6 @@
 # mcpp by katahiromz
 
-This is katahiromz's fork of mcpp 2.7.2 made by Kiyoshi Matsui.
+This program is a C preprocessor written in C, and a fork of mcpp 2.7.2 created by Kiyoshi Matsui.
 
 The original software can be found at http://mcpp.sourceforge.net .
 
