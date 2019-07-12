@@ -1,4 +1,4 @@
-# mcpp
+# mcpp by katahiromz
 
 This is katahiromz's fork of mcpp 2.7.2 made by Kiyoshi Matsui.
 
