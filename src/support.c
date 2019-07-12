@@ -76,7 +76,7 @@
 #include    "system.H"
 #include    "internal.H"
 #endif
-#include "UTF.h"
+#include "UTF/UTF.h"
 
 static void     scan_id( int c);
                 /* Scan an identifier           */

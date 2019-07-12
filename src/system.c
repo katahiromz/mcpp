@@ -42,7 +42,7 @@
 #include    "system.H"
 #include    "internal.H"
 #endif
-#include "UTF.h"
+#include "UTF/UTF.h"
 
 #if     HOST_SYS_FAMILY == SYS_UNIX
 #include    "unistd.h"              /* For getcwd(), readlink() */
