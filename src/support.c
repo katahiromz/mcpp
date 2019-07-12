@@ -1903,7 +1903,27 @@ static char *   mcpp_fgets(
     FILE *  stream
 )
 {
-    return UTF8_fgets((UTF_UC8 *)s, size, stream);
+    UTF_UC16 uj16[512];
+    UTF_SIZE_T len;
+
+    switch (infile->bom)
+    {
+    case BOM_UNKNOWN:
+    case BOM_UTF8:
+        return UTF8_fgets((UTF_UC8 *)s, size, stream);
+    case BOM_UTF16LE:
+        if (UTF16_fgets(uj16, 256, stream))
+        {
+            len = UTF_uj16_len(uj16) + 1;
+            UTF_uj16_to_uj8(uj16, len, s, size);
+            return s;
+        }
+        break;
+    case BOM_UTF16BE:
+        break;
+    }
+
+    return NULL;
 }
 
 static char *   get_line(
@@ -1928,6 +1948,12 @@ static char *   get_line(
 
     if (infile == NULL)                     /* End of a source file */
         return  NULL;
+
+    if (infile->bom == BOM_UTF16BE) {
+        cerror("UTF-16BE is not supported yet", NULL, 0L, NULL);
+        return NULL;
+    }
+
     ptr = infile->bptr = infile->buffer;
     if ((mcpp_debug & MACRO_CALL) && src_line == 0) /* Initialize   */
         com_cat_line.last_line = bsl_cat_line.last_line = 0L;
@@ -2316,6 +2342,7 @@ FILEINFO *  get_file(
         infile->last_fprintf = mcpp_fprintf;
 #endif
     }
+    file->bom = BOM_UNKNOWN;
     infile = file;                          /* New current file     */
 
     return  file;                           /* All done.            */

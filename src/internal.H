@@ -222,6 +222,14 @@ typedef struct defbuf {
         char            name[1];    /* Macro name                   */
 } DEFBUF;
 
+typedef enum BOM
+{
+    BOM_UNKNOWN,
+    BOM_UTF8,
+    BOM_UTF16LE,
+    BOM_UTF16BE,
+} BOM;
+
 /*
  * The FILEINFO structure stores information about open files and macros
  * being expanded.
@@ -247,6 +255,7 @@ typedef struct fileinfo {
         int (* last_fputs)  ( const char * s, OUTDEST od);
         int (* last_fprintf)( OUTDEST od, const char * format, ...);
 #endif
+        BOM bom;
 } FILEINFO;
 
 /*

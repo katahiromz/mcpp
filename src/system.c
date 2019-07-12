@@ -3535,12 +3535,60 @@ void    add_file(
     FILEINFO *      file;
     const char *    too_many_include_nest =
             "More than %.0s%ld nesting of #include";    /* _F_ _W4_ */
+    BOM bom = BOM_UNKNOWN;
+    long pos = 0;
+    size_t size;
+    char buf[3] = { 0x7F, 0x7F, 0x7F };
+
+    if (fp && ftell(fp) == 0)
+    {
+        size = fread(buf, 1, 3, fp);
+        if (size == 3 && memcmp(buf, "\xEF\xBB\xBF", 3) == 0)
+        {
+            bom = BOM_UTF8;
+            pos = 3;
+        }
+        else if (size >= 2 && memcmp(buf, "\xFF\xFE", 2) == 0)
+        {
+            bom = BOM_UTF16LE;
+            if (size > 2)
+                fseek(fp, -1, SEEK_CUR);
+            pos = 2;
+        }
+        else if (size >= 2 && memcmp(buf, "\xFE\xFF", 2) == 0 ||
+                 (size >= 2 && !buf[0] && buf[1]))
+        {
+            bom = BOM_UTF16BE;
+            if (size > 2)
+                fseek(fp, -1, SEEK_CUR);
+            pos = 2;
+        }
+        else if (size >= 2 && buf[0] && !buf[1])
+        {
+            bom = BOM_UTF16LE;
+            fseek(fp, 0, SEEK_SET);
+            pos = 0;
+        }
+        else if (size >= 2 && !buf[0] && buf[1])
+        {
+            bom = BOM_UTF16BE;
+            fseek(fp, 0, SEEK_SET);
+            pos = 0;
+        }
+        else
+        {
+            fseek(fp, 0, SEEK_SET);
+            pos = 0;
+        }
+    }
 
     filename = set_fname( filename);    /* Search or append to fnamelist[]  */
     fullname = set_fname( fullname);    /* Search or append to fnamelist[]  */
     file = get_file( filename, src_dir, fullname, (size_t) NBUFF, include_opt);
                                         /* file == infile           */
     file->fp = fp;                      /* Better remember FILE *   */
+    file->bom = bom;
+    file->pos += pos;
     cur_fname = filename;
 
     if (include_nest >= INCLUDE_NEST)   /* Probably recursive #include      */
