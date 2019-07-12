@@ -728,9 +728,9 @@ SHELL=${CONFIG_SHELL-/bin/sh}
 # Identity of this package.
 PACKAGE_NAME='mcpp'
 PACKAGE_TARNAME='mcpp'
-PACKAGE_VERSION='2.7.2'
-PACKAGE_STRING='mcpp 2.7.2'
-PACKAGE_BUGREPORT='kmatsui@t3.rim.or.jp'
+PACKAGE_VERSION='2.7.3'
+PACKAGE_STRING='mcpp 2.7.3'
+PACKAGE_BUGREPORT='katayama.hirofumi.mz@gmail.com'
 
 ac_unique_file="src/main.c"
 # Factoring default headers for most tests.
