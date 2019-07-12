@@ -6,7 +6,7 @@ This program can read UTF-16 files and output UTF-8 text.
 
 ## How to build
 
-You needs gcc compiler to build this project.
+You needs gcc compiler and Linux-like environment to build this project.
 
 ```bash
 $ git clone --recursive https://github.com/katahiromz/mcpp.git
