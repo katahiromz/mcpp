@@ -2,8 +2,9 @@ ChangeLog of MCPP and its accompanying Validation Suite
 
 2019/07/12  katahiromz
         * V.2.7.3
-        * Enable to read UTF-16 files and output UTF-8 text.
+        * Enabled to read UTF-16 files and output UTF-8 text.
         * Default encoding became UTF-8.
+        * Enabled -v, --version and --help options.
 
 2008/11/30  kmatsui
         * V.2.7.2
