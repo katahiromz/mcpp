@@ -15,14 +15,12 @@ $ ./configure
 $ make
 ```
 
-If failed with error message:
-
+If you failed with error message like:
 ```txt
 ../libtool: line 930: X--tag=CC: command not found
 ...
 ```
-
-Replace this line in libtool:
+Please replace this line in file `libtool`:
 ```txt
 ECHO="printf %s\\n"
 ```
