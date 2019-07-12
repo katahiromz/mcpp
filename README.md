@@ -8,7 +8,7 @@ outputs UTF-8 text.
 
 ## How to build
 
-You need Linux-like environment to build this project.
+You need Linux-like environment to build this project. For Windows, use `MSYS2`.
 
 ```bash
 $ git clone --recursive https://github.com/katahiromz/mcpp.git
