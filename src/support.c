@@ -76,6 +76,7 @@
 #include    "system.H"
 #include    "internal.H"
 #endif
+#include "UTF.h"
 
 static void     scan_id( int c);
                 /* Scan an identifier           */
@@ -1599,7 +1600,7 @@ int     get_ch( void)
         cur_fullname = infile->full_fname;
         cur_fname = infile->real_fname;     /* Restore current fname*/
         if (infile->pos != 0L) {            /* Includer was closed  */
-            infile->fp = fopen( cur_fullname, "r");
+            infile->fp = fopen( cur_fullname, "rb");
             fseek( infile->fp, infile->pos, SEEK_SET);
         }   /* Re-open the includer and restore the file-position   */
         len = (int) (infile->bptr - infile->buffer);
@@ -1902,7 +1903,7 @@ static char *   mcpp_fgets(
     FILE *  stream
 )
 {
-    return fgets( s, size, stream);
+    return UTF8_fgets((UTF_UC8 *)s, size, stream);
 }
 
 static char *   get_line(

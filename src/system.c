@@ -42,6 +42,7 @@
 #include    "system.H"
 #include    "internal.H"
 #endif
+#include "UTF.h"
 
 #if     HOST_SYS_FAMILY == SYS_UNIX
 #include    "unistd.h"              /* For getcwd(), readlink() */
@@ -2484,7 +2485,7 @@ static char *   norm_path(
         struct hmap_header_map  hmap;
         size_t      cnt;
         FILE *      fp;
-        fp = fopen( fname, "r");
+        fp = fopen( fname, "rb");
         cnt = fread( & hmap, sizeof (struct hmap_header_map), 1, fp);
         fclose( fp);
         if (cnt == 0 || hmap.magic != HMAP_SAME_ENDIANNESS_MAGIC)
@@ -2755,7 +2756,7 @@ static void init_gcc_macro( void)
                 , include_dir, cplus_val ? "xx" : "cc"
                 , gcc_maj_ver, gcc_min_ver, cp);
             /* Note that norm_path() append a PATH_DELIM.   */
-        if ((fp = fopen( fname, "r")) == NULL) {
+        if ((fp = fopen( fname, "rb")) == NULL) {
             mcpp_fprintf( ERR, "The mode for %s has not been installed.\n"
                     , arch);
             longjmp( error_exit, -1);
@@ -2763,7 +2764,7 @@ static void init_gcc_macro( void)
         nargs = i ? 0 : DEF_NOARGS_PREDEF_OLD;
             /* g*_predef_std.h has DEF_NOARGS_PREDEF or non-negative args   */
             /* while g*_predef_old.h has only DEF_NOARGS_PREDEF_OLD args    */
-        while (fgets( lbuf, BUFSIZ, fp) != NULL) {
+        while (UTF8_fgets((UTF_UC8 *)lbuf, BUFSIZ, fp) != NULL) {
             unget_string( lbuf, "gcc_predefine");
             if (skip_ws() == '#'
                 && scan_token( skip_ws(), (tp = work_buf, &tp), work_end)
@@ -3431,11 +3432,11 @@ search:
     if (! fullname)                 /* Non-existent or directory    */
         return  FALSE;
     if (standard && included( fullname))        /* Once included    */
-        goto  true;
+        goto  true_label;
         
     if ((max_open != 0 && max_open <= include_nest)
                             /* Exceed the known limit of open files */
-            || ((fp = fopen( fullname, "r")) == NULL && errno == EMFILE)) {
+            || ((fp = fopen( fullname, "rb")) == NULL && errno == EMFILE)) {
                             /* Reached the limit for the first time */
         if (mcpp_debug & PATH) {
 #if HOST_COMPILER == BORLANDC
@@ -3455,15 +3456,15 @@ search:
         file->pos = ftell( file->fp);
         fclose( file->fp);
         /* In case of failure, re-open the includer */
-        if ((fp = fopen( fullname, "r")) == NULL) {
-            file->fp = fopen( cur_fullname, "r");
+        if ((fp = fopen( fullname, "rb")) == NULL) {
+            file->fp = fopen( cur_fullname, "rb");
             fseek( file->fp, file->pos, SEEK_SET);
-            goto  false;
+            goto  false_label;
         }
         if (max_open == 0)      /* Remember the limit of the system */
             max_open = include_nest;
     } else if (fp == NULL)                  /* No read permission   */ 
-        goto  false;
+        goto  false_label;
     /* Truncate buffer of the includer to save memory   */
     len = (int) (file->bptr - file->buffer);
     if (len) {
@@ -3510,9 +3511,9 @@ search:
     if (mkdep && ((mkdep & MD_SYSHEADER) || ! infile->sys_header))
         put_depend( fullname);          /* Output dependency line   */
 
-true:
+true_label:
     return  TRUE;
-false:
+false_label:
     free( fullname);
     return  FALSE;
 }
@@ -3620,7 +3621,7 @@ static char *   search_header_map(
     stat( hmap_file, &stat_buf);            /* Get size of the file */
     fsize = stat_buf.st_size;
     contents = xmalloc( fsize + 1);
-    fp = fopen( hmap_file, "r");
+    fp = fopen( hmap_file, "rb");
     fread( contents, fsize, 1, fp);     /* Read whole of the file at once   */
     hmap = (struct hmap_header_map *) contents;
 
@@ -4584,7 +4585,7 @@ static void do_preprocessed( void)
     lbuf = file->bptr = file->buffer;           /* Reset file->bptr */
 
     /* Copy the input to output until a comment line appears.       */
-    while (fgets( lbuf, NBUFF, file->fp) != NULL
+    while (UTF8_fgets((UTF_UC8 *)lbuf, NBUFF, file->fp) != NULL
             && memcmp( lbuf, "/*", 2) != 0) {
 #if STD_LINE_PREFIX == FALSE
         if (memcmp( lbuf, "#line ", 6) == 0) {
@@ -4601,7 +4602,7 @@ static void do_preprocessed( void)
                 , NULL, 0L, NULL);
 
     /* Define macros according to the #define lines.    */
-    while (fgets( lbuf, NWORK, file->fp) != NULL) {
+    while (UTF8_fgets((UTF_UC8 *)lbuf, NWORK, file->fp) != NULL) {
         if (memcmp( lbuf, "/*", 2) == 0) {
                                     /* Standard predefined macro    */
             continue;

@@ -372,7 +372,7 @@ int     main
 
     /* Open input file, "-" means stdin.    */
     if (in_file != NULL && ! str_eq( in_file, "-")) {
-        if ((fp_in = fopen( in_file, "r")) == NULL) {
+        if ((fp_in = fopen( in_file, "rb")) == NULL) {
             mcpp_fprintf( ERR, "Can't open input file \"%s\".\n", in_file);
             errors++;
 #if MCPP_LIB
