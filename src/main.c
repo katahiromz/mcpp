@@ -341,21 +341,6 @@ int     main
     char *  out_file = NULL;
     char *  stdin_name = "<stdin>";
 
-    if (argc >= 2)
-    {
-        if (strcmp(argv[1], "--version") == 0 ||
-            strcmp(argv[1], "-v") == 0)
-        {
-            version();
-            return 0;
-        }
-        if (strcmp(argv[1], "--help") == 0)
-        {
-            usage('?');
-            return 0;
-        }
-    }
-
     if (setjmp( error_exit) == -1) {
         errors++;
         goto  fatal_error_exit;
@@ -374,7 +359,23 @@ int     main
     fp_out = stdout;
     fp_err = stderr;
     fp_debug = stdout;
-        /*
+
+    if (argc >= 2)
+    {
+        if (strcmp(argv[1], "--version") == 0 ||
+            strcmp(argv[1], "-v") == 0)
+        {
+            version();
+            return 0;
+        }
+        if (strcmp(argv[1], "--help") == 0)
+        {
+            usage('?');
+            return 0;
+        }
+    }
+
+    /*
          * Debugging information is output to stdout in order to
          *      synchronize with preprocessed output.
          */
