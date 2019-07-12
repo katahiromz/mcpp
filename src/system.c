@@ -3562,20 +3562,16 @@ void    add_file(
                 fseek(fp, -1, SEEK_CUR);
             pos = 2;
         }
-        else if (size >= 2 && buf[0] && !buf[1])
-        {
-            bom = BOM_UTF16LE;
-            fseek(fp, 0, SEEK_SET);
-            pos = 0;
-        }
-        else if (size >= 2 && !buf[0] && buf[1])
-        {
-            bom = BOM_UTF16BE;
-            fseek(fp, 0, SEEK_SET);
-            pos = 0;
-        }
         else
         {
+            if (size >= 2 && buf[0] && !buf[1])
+            {
+                bom = BOM_UTF16LE;
+            }
+            else if (size >= 2 && !buf[0] && buf[1])
+            {
+                bom = BOM_UTF16BE;
+            }
             fseek(fp, 0, SEEK_SET);
             pos = 0;
         }
