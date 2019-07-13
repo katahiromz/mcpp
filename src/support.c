@@ -1923,13 +1923,19 @@ static char *   read_a_comment(
     return  sp;                             /* Never reach here     */
 }
 
+typedef union BufferUnion
+{
+    UTF_UC16 uj16[512];
+    UTF_UC32 uj32[256];
+} BufferUnion;
+
 static char *   mcpp_fgets(
     char *  s,
     int     size,
     FILE *  stream
 )
 {
-    UTF_UC16 uj16[512];
+    BufferUnion bu;
     UTF_SIZE_T len;
 
     switch (infile->bom)
@@ -1938,18 +1944,34 @@ static char *   mcpp_fgets(
     case BOM_UTF8:
         return UTF8_fgets((UTF_UC8 *)s, size, stream);
     case BOM_UTF16LE:
-        if (UTF16_fgets(uj16, 512, stream))
+        if (UTF16_fgets(bu.uj16, 512, stream))
         {
-            len = UTF_uj16_len(uj16) + 1;
-            UTF_uj16_to_uj8(uj16, len, s, size);
+            len = UTF_uj16_len(bu.uj16) + 1;
+            UTF_uj16_to_uj8(bu.uj16, len, s, size);
             return s;
         }
         break;
     case BOM_UTF16BE:
-        if (UTF16XE_fgets(uj16, 512, stream))
+        if (UTF16XE_fgets(bu.uj16, 512, stream))
         {
-            len = UTF_uj16_len(uj16) + 1;
-            UTF_uj16_to_uj8(uj16, len, s, size);
+            len = UTF_uj16_len(bu.uj16) + 1;
+            UTF_uj16_to_uj8(bu.uj16, len, s, size);
+            return s;
+        }
+        break;
+    case BOM_UTF32LE:
+        if (UTF32_fgets(bu.uj32, 256, stream))
+        {
+            len = UTF_uj32_len(bu.uj32) + 1;
+            UTF_uj32_to_uj8(bu.uj32, len, s, size);
+            return s;
+        }
+        break;
+    case BOM_UTF32BE:
+        if (UTF32XE_fgets(bu.uj32, 256, stream))
+        {
+            len = UTF_uj32_len(bu.uj32) + 1;
+            UTF_uj32_to_uj8(bu.uj32, len, s, size);
             return s;
         }
         break;

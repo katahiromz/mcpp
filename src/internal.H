@@ -228,6 +228,8 @@ typedef enum BOM
     BOM_UTF8,
     BOM_UTF16LE,
     BOM_UTF16BE,
+    BOM_UTF32LE,
+    BOM_UTF32BE
 } BOM;
 
 /*
