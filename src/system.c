@@ -2254,6 +2254,22 @@ static void set_sys_dirs(
     set_a_dir( "/usr/include"); /* Should be placed after C_INCLUDE_DIR?    */
 #endif
 #endif
+
+#ifdef RISOHEDITOR
+    {
+        __declspec(dllimport) unsigned long __stdcall GetModuleFileNameA(void *, char *, unsigned long);
+        char szPath[260], *pch;
+        GetModuleFileNameA(NULL, szPath, 260);
+        *strrchr(szPath, '\\') = 0;
+        for (pch = szPath; *pch; ++pch)
+        {
+            if (*pch == '\\')
+                *pch = '/';
+        }
+        strcat(szPath, "/../lib/gcc/i686-w64-mingw32/7.3.0/include");
+        set_a_dir( szPath);
+    }
+#endif
 }
 
 static void set_a_dir(
