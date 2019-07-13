@@ -459,7 +459,7 @@
  * Define MBCHAR (multi-byte character encoding) to SJIS, EUC_JP or other.
  */
 #ifndef MBCHAR
-#define MBCHAR              UTF8
+#define MBCHAR              0
 #endif
 
 /*

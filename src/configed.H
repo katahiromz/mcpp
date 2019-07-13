@@ -175,9 +175,6 @@
 #endif
 
 #if     SYS_FAMILY == SYS_UNIX
-#ifndef MBCHAR
-#define MBCHAR              UTF8
-#endif
 #endif
 
 #if     COMPILER == GNUC
@@ -313,7 +310,7 @@
  * Define MBCHAR (multi-byte character encoding) to SJIS, EUC_JP or other.
  */
 #ifndef MBCHAR
-#define MBCHAR              UTF8
+#define MBCHAR              0
 #endif
 
 /*
