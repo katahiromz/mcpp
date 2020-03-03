@@ -320,9 +320,9 @@ static int      i_split = FALSE;                /* For -I- option   */
 static int      gcc_work_dir = FALSE;           /* For -fworking-directory  */
 static int      gcc_maj_ver;                    /* __GNUC__         */
 static int      gcc_min_ver;                    /* __GNUC_MINOR__   */
+#endif
 static int      dDflag = FALSE;         /* Flag of -dD option       */
 static int      dMflag = FALSE;         /* Flag of -dM option       */
-#endif
 
 #if COMPILER == GNUC || COMPILER == MSC
 /*
@@ -382,8 +382,8 @@ void    init_system( void)
     sysroot = NULL;
     gcc_work_dir = i_split = FALSE;
     quote_dir_end = quote_dir;
-    dDflag = dMflag = FALSE;
 #endif
+    dDflag = dMflag = FALSE;
 #if COMPILER == MSC
     wchar_t_modified = FALSE;
 #endif
@@ -604,6 +604,7 @@ plus:
             if (! integrated_cpp)
                 usage( opt);
             break;                  /* Else ignore this option      */
+#endif  /* COMPILER == GNUC */
         case 'd':
             if (str_eq( mcpp_optarg, "M")) {                /* -dM          */
                 dMflag = TRUE;
@@ -618,7 +619,6 @@ plus:
                 usage( opt);
             }
             break;
-#endif  /* COMPILER == GNUC */
 
         case 'D':                           /* Define symbol        */
             if (def_cnt >= MAX_DEF) {
@@ -1620,7 +1620,7 @@ static void set_opt_list(
 #endif
 
 #if COMPILER == GNUC
-    "$A:a:cd:Ef:g:i:l:r:s:t:u:O:p:q:wx:",
+    "$A:a:cEf:g:i:l:r:s:t:u:O:p:q:wx:",
 #elif COMPILER == MSC
     "Aa:F:G:JR:T:XZ:uw",
 #elif   COMPILER == LCC
@@ -1639,7 +1639,7 @@ static void set_opt_list(
 
     const char * const *    lp = & list[ 0];
 
-    strcpy( optlist, "23+@:e:h:jkn:o:vzCD:I:KM:NPQS:U:V:W:");
+    strcpy( optlist, "23+@:e:h:jkn:o:vzCD:d:I:KM:NPQS:U:V:W:");
                                                 /* Default options  */
     while (*lp)
         strcat( optlist, *lp++);
@@ -4962,10 +4962,8 @@ void    at_end( void)
  * Handle the commands to be executed at the end of processing.
  */
 {
-#if COMPILER == GNUC
     if (dMflag || dDflag)
         dump_def( FALSE, FALSE);
-#endif
 }
 
 #if MCPP_LIB

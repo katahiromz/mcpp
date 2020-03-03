@@ -15,11 +15,11 @@
  */
 
 /* Define target operating-system.  */
-#define SYSTEM              SYS_FREEBSD
+#define SYSTEM              SYS_MINGW
 
 /* Define target compiler.          */
 #ifndef COMPILER
-#define COMPILER            INDEPENDENT /* compiler-independent-build   */
+#define COMPILER            GNUC
 #endif
 
 /* Define host operating-system.    */
