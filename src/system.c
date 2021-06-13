@@ -3953,6 +3953,19 @@ void    sharp(
     file = sharp_file ? sharp_file : infile;
     if (! file)
         return;
+#ifdef RISOHEDITOR
+    extern int pragma_RisohEditor;
+    if (pragma_RisohEditor)
+    {
+        pragma_RisohEditor = 0;
+        mcpp_fputs("#line 1 \"RisohEditor.rc\"\n", OUT);
+        file->line = 1;
+        free(file->filename);
+        file->filename = strdup("RisohEditor.rc");
+        wrong_line = FALSE;
+        return;
+    }
+#endif
     while (! file->fp)
         file = file->parent;
     line = sharp_file ? sharp_file->line : src_line;
@@ -4092,6 +4105,8 @@ static int  is_junk( void)
 #define __SETLOCALE     1       /* #pragma __setlocale( "encoding") */
 #define SETLOCALE       2       /* #pragma setlocale( "encoding")   */
 
+int pragma_RisohEditor = 0;
+
 void    do_pragma( void)
 /*
  * Process the #pragma lines.
@@ -4172,6 +4187,11 @@ void    do_pragma( void)
             do_once( file->full_fname);
             goto  skip_nl;
         }
+#ifdef RISOHEDITOR
+    } else if (str_eq( identifier, "RisohEditor")) {   /* #pragma RisohEditor */
+        pragma_RisohEditor = 1;
+        goto  skip_nl;
+#endif
     } else if (str_eq( identifier, "MCPP")) {
         if (scan_token( skip_ws(), (tp = work_buf, &tp), work_end) != NAM) {
             if (warn_level & 1)

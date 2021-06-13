@@ -1,5 +1,8 @@
 ChangeLog of MCPP and its accompanying Validation Suite
 
+2021/06/13 katahiromz
+        * Support "#pragma RisohEditor" to reset line number info.
+
 2019/07/13  katahiromz
         * V.2.7.3
         * Enabled to read UTF-16/UTF-32 files and output UTF-8 text.
