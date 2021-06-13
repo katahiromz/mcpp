@@ -3950,22 +3950,31 @@ void    sharp(
     FILEINFO *  file;
     int         line;
 
-    file = sharp_file ? sharp_file : infile;
-    if (! file)
-        return;
 #ifdef RISOHEDITOR
     extern int pragma_RisohEditor;
     if (pragma_RisohEditor)
     {
         pragma_RisohEditor = 0;
-        mcpp_fputs("#line 1 \"RisohEditor.rc\"\n", OUT);
-        file->line = 1;
-        free(file->filename);
-        file->filename = strdup("RisohEditor.rc");
+        mcpp_fputs("# 1 \"RisohEditor.rc\"\n", OUT);
+        if (sharp_file)
+        {
+            sharp_file->line = 1;
+            free(sharp_file->filename);
+            sharp_file->filename = strdup("RisohEditor.rc");
+        }
+        if (infile)
+        {
+            infile->line = 1;
+            free(infile->filename);
+            infile->filename = strdup("RisohEditor.rc");
+        }
         wrong_line = FALSE;
         return;
     }
 #endif
+    file = sharp_file ? sharp_file : infile;
+    if (! file)
+        return;
     while (! file->fp)
         file = file->parent;
     line = sharp_file ? sharp_file->line : src_line;
