@@ -1,5 +1,9 @@
 ChangeLog of MCPP and its accompanying Validation Suite
 
+2025/12/03 katahiromz
+        * Fix build to latest MSYS2.
+        * Make UTF-16/UTF-32 conversion buffer 4096 bytes.
+
 2021/06/13 katahiromz
         * Support "#pragma RisohEditor" to reset line number info.
 
