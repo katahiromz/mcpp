@@ -371,3 +371,6 @@
 #include        "xalloc.h"
 #endif
 
+#ifndef LL_FORM
+    #define LL_FORM "ll"
+#endif

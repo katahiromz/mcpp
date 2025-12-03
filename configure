@@ -20207,7 +20207,7 @@ echo $ECHO_N "checking the /mingw directory... $ECHO_C" >&6; }
 if test "${ac_cv_mingw_dir+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
-  cd /mingw
+  cd ${MSYSTEM_PREFIX}
             ac_cv_mingw_dir=`$src_dir/config/mingw_root`
 
 fi
