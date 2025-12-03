@@ -1923,18 +1923,6 @@ static char *   read_a_comment(
     return  sp;                             /* Never reach here     */
 }
 
-typedef union BufferUnion
-{
-    UTF_UC32 uj32[4096];
-    UTF_UC16 uj16[4096 * 2];
-} BufferUnion;
-
-BufferUnion g_bu;
-
-#ifndef _countof
-	#define _countof(array) (sizeof(array) / sizeof(array[0]))
-#endif
-
 static char *   mcpp_fgets(
     char *  s,
     int     size,
@@ -1949,35 +1937,47 @@ static char *   mcpp_fgets(
     case BOM_UTF8:
         return UTF8_fgets((UTF_UC8 *)s, size, stream);
     case BOM_UTF16LE:
-        if (UTF16_fgets(g_bu.uj16, _countof(g_bu.uj16), stream))
         {
-            len = UTF_uj16_len(g_bu.uj16) + 1;
-            UTF_uj16_to_uj8(g_bu.uj16, len, s, size);
-            return s;
+            UTF_UC16 *buffer = UTF16_getline(stream);
+            if (buffer) {
+                len = UTF_uj16_len(buffer) + 1;
+                UTF_uj16_to_uj8(buffer, len, s, size);
+                free(buffer);
+                return s;
+            }
         }
         break;
     case BOM_UTF16BE:
-        if (UTF16XE_fgets(g_bu.uj16, _countof(g_bu.uj16), stream))
         {
-            len = UTF_uj16_len(g_bu.uj16) + 1;
-            UTF_uj16_to_uj8(g_bu.uj16, len, s, size);
-            return s;
+            UTF_UC16 *buffer = UTF16XE_getline(stream);
+            if (buffer) {
+                len = UTF_uj16_len(buffer) + 1;
+                UTF_uj16_to_uj8(buffer, len, s, size);
+                free(buffer);
+                return s;
+            }
         }
         break;
     case BOM_UTF32LE:
-        if (UTF32_fgets(g_bu.uj32, _countof(g_bu.uj32), stream))
         {
-            len = UTF_uj32_len(g_bu.uj32) + 1;
-            UTF_uj32_to_uj8(g_bu.uj32, len, s, size);
-            return s;
+            UTF_UC32 *buffer = UTF32_getline(stream);
+            if (buffer) {
+                len = UTF_uj32_len(buffer) + 1;
+                UTF_uj32_to_uj8(buffer, len, s, size);
+                free(buffer);
+                return s;
+            }
         }
         break;
     case BOM_UTF32BE:
-        if (UTF32XE_fgets(g_bu.uj32, _countof(g_bu.uj32), stream))
         {
-            len = UTF_uj32_len(g_bu.uj32) + 1;
-            UTF_uj32_to_uj8(g_bu.uj32, len, s, size);
-            return s;
+            UTF_UC32 *buffer = UTF32XE_getline(stream);
+            if (buffer) {
+                len = UTF_uj32_len(buffer) + 1;
+                UTF_uj32_to_uj8(buffer, len, s, size);
+                free(buffer);
+                return s;
+            }
         }
         break;
     }
