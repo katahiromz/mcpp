@@ -1,5 +1,8 @@
 ChangeLog of MCPP and its accompanying Validation Suite
 
+2026/08/04 katahiromz
+        * "#line ..." --> "# ..."
+
 2025/12/03 katahiromz
         * Fix build to latest MSYS2.
         * Make UTF-16/UTF-32 buffer length unlimitted.

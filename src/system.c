@@ -1369,7 +1369,7 @@ void version( void)
 #endif
 
 #ifdef  VERSION_MSG
-        "MCPP V.2.7.3 (2019/07) "
+        "MCPP V.2.7.4 (2026/08) "
 #else
         "MCPP V.", VERSION, " (", DATE, ") "
 #endif
@@ -3985,10 +3985,11 @@ void    sharp(
     sh_line = line;
     if (keep_comments)
         mcpp_fputc( '\n', OUT);         /* Ensure to be on line top */
-    if (std_line_prefix)
-        mcpp_fprintf( OUT, "#line %ld", line);
-    else
-        mcpp_fprintf( OUT, "%s%ld", LINE_PREFIX, line);
+    //if (std_line_prefix)
+    //    mcpp_fprintf( OUT, "#line %ld", line);
+    //else
+    //    mcpp_fprintf( OUT, "%s%ld", LINE_PREFIX, line);
+    mcpp_fprintf( OUT, "# %ld", line);
     cur_file( file, sharp_file, flag);
     mcpp_fputc( '\n', OUT);
 sharp_exit:
